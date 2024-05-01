@@ -6,92 +6,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        #userList {
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .userCard {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .approved {
+            background-color: #e8f5e9;
+        }
+
+        .unapproved {
+            background-color: #ffebee;
+        }
+
+        .under-review {
+            background-color: #fff3e0;
+        }
+
+        .userInfo {
+            flex-grow: 1;
+        }
+
+        h3, p {
+            margin: 5px 0;
+        }
+
+        .button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .approve {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .unapprove {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .open-pdf {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        #searchContainer {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 100%; /* Make width responsive */
+            max-width: 300px; /* Limit maximum width */
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        /* Media Queries for Responsive Adjustments */
+        @media (max-width: 768px) {
+            .userCard {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .button {
+                margin-top: 10px;
+                margin-left: 0;
+                width: 100%;
+            }
+
+            #userList {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
-
-<style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f4f4f4;
-        margin: 0;
-        padding: 20px;
-        color: #333;
-    }
-
-    #userList {
-        max-width: 800px;
-        margin: 20px auto;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .userCard {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .approved {
-        background-color: #e8f5e9; /* light green */
-    }
-
-    .unapproved {
-        background-color: #ffebee; /* light red */
-    }
-
-    .under-review {
-        background-color: #fff3e0; /* light orange */
-    }
-
-    .userInfo {
-        flex-grow: 1;
-    }
-
-    h3, p {
-        margin: 5px 0;
-    }
-
-    .button {
-        padding: 10px 15px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-
-    .approve {
-        background-color: #4CAF50; /* green */
-        color: white;
-    }
-
-    .unapprove {
-        background-color: #f44336; /* red */
-        color: white;
-    }
-
-    .open-pdf {
-        background-color: #008CBA; /* blue */
-        color: white;
-    }
-
-    #searchContainer {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    input[type="text"] {
-        padding: 10px;
-        width: 300px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-    }
-</style>
 
 <body>
     <h1 class="heading">Sankalp Admin Panel</h1>
@@ -108,22 +126,15 @@
         import { getFirestore, collection, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js";
 
         const firebaseConfig = {
+            apiKey: "AIzaSyADfioPB-4QORB8uyB9qRFAl-_q-q1cNhg",
+            authDomain: "miniproject-29dc8.firebaseapp.com",
+            projectId: "miniproject-29dc8",
+            storageBucket: "miniproject-29dc8.appspot.com",
+            messagingSenderId: "334331961632",
+            appId: "1:334331961632:web:9cd7dde08bef106d6af745",
+            measurementId: "G-X358QV5XL6"
+        };
 
-apiKey: "AIzaSyADfioPB-4QORB8uyB9qRFAl-_q-q1cNhg",
-
-authDomain: "miniproject-29dc8.firebaseapp.com",
-
-projectId: "miniproject-29dc8",
-
-storageBucket: "miniproject-29dc8.appspot.com",
-
-messagingSenderId: "334331961632",
-
-appId: "1:334331961632:web:9cd7dde08bef106d6af745",
-
-measurementId: "G-X358QV5XL6"
-
-};
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
@@ -178,20 +189,19 @@ measurementId: "G-X358QV5XL6"
         }
 
         async function displayUsers() {
-    console.log("Fetching users...");
-    const querySnapshot = await getDocs(usersRef);
-    userListContainer.innerHTML = '';
-    users = []; // Reset users array
-    querySnapshot.forEach(doc => {
-        const userData = { ...doc.data(), userUID: doc.id };
-        if (userData.userType === "Ngo") { // Check if the userType is 'Ngo'
-            users.push(userData); // Add user to array only if it's an NGO
-            displayUser(userData);
+            console.log("Fetching users...");
+            const querySnapshot = await getDocs(usersRef);
+            userListContainer.innerHTML = '';
+            users = []; // Reset users array
+            querySnapshot.forEach(doc => {
+                const userData = { ...doc.data(), userUID: doc.id };
+                if (userData.userType === "Ngo") { // Check if the userType is 'Ngo'
+                    users.push(userData); // Add user to array only if it's an NGO
+                    displayUser(userData);
+                }
+            });
+            console.log(`Displayed ${users.length} users.`);
         }
-    });
-    console.log(`Displayed ${users.length} users.`);
-}
-
 
         function openPDF(link) {
             window.open(link, '_blank');
